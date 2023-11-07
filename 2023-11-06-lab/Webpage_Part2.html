@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebPage</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
+    .container {
+      width: 300px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      margin: 0;
+      padding-bottom: 10px;
+    }
+    form {
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+    input[type="submit"], input[type="button"] {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    input[type="submit"]:hover, input[type="button"]:hover {
+      background-color: #0056b3;
+    }
+    #result {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>WebPage</h2>
+    <form id="validationForm">
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" placeholder="example@example.com" required>
+
+      <label for="phone">Phone Number:</label>
+      <input type="text" id="phone" name="phone" placeholder="9784301111" required>
+
+      <label for="domain">Domain:</label>
+      <input type="text" id="domain" name="domain" placeholder="example.com" required>
+
+      <input type="submit" value="Submit">
+      <input type="button" value="Cancel" onclick="clearForm()">
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    function validatePhoneNumber(phoneNumber) {
+      const phoneRegex = /^\d{10}$/;
+      return phoneRegex.test(phoneNumber);
+    }
+
+    function validateDomain(domain) {
+      const domainRegex = /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+(?:[a-zA-Z]{2,})$/;
+      return domainRegex.test(domain);
+    }
+
+    function clearForm() {
+      document.getElementById("validationForm").reset();
+      document.getElementById("result").innerHTML = "";
+    }
+
+    document.getElementById("validationForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const phoneNumber = document.getElementById("phone").value;
+      const domain = document.getElementById("domain").value;
+
+      const isEmailValid = validateEmail(email);
+      const isPhoneNumberValid = validatePhoneNumber(phoneNumber);
+      const isDomainValid = validateDomain(domain);
+
+      let resultMessage = "Results:<br>";
+      resultMessage += `Email: ${isEmailValid ? "Valid" : "Invalid"}<br>`;
+      resultMessage += `Phone Number: ${isPhoneNumberValid ? "Valid" : "Invalid"}<br>`;
+      resultMessage += `Domain: ${isDomainValid ? "Valid" : "Invalid"}`;
+
+      if (isEmailValid && isPhoneNumberValid && isDomainValid) {
+        resultMessage += "<br>Submitted Successfully!";
+      }
+
+      document.getElementById("result").innerHTML = resultMessage;
+    });
+  </script>
+</body>
+</html>
