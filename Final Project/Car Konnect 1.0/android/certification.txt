@@ -1,0 +1,24 @@
+---------------------------------------------------
+Here are the ownership and the certification details
+of the Car Konnect 1.0
+---------------------------------------------------
+
+app_name - 						Car Konnect
+app_alias - 					carkonnect
+app_author_name - 				My Company
+app_author_organizational - 	My Company
+app_author_organization - 		My Company
+app_author_locality - 			My Company
+app_author_state - 				New Jersey
+app_author_country - 			United States
+app_password - 					1zQyE4UynNHY
+app_versionName - 				versionName "1.0"
+app_versionCode - 				100
+
+---------------------------------------------------
+The certification was created by WebIntoApp.com at
+the Tuesday 5th of December 2023 02:43:54 AM
+
+https://www.webintoapp.com
+---------------------------------------------------
+

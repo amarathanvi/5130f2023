@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="style/style.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    /* Your existing CSS styles */
+    body {
+      background-image: url("image/roads.jpg");
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 35% 70%;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Additional styles for bid_details.html */
+    #bidDetailsForm {
+      max-width: 400px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      margin-top: 50px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .bid-message {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #ffc107; /* Yellow color for the message background */
+      color: #fff; /* White text color */
+    }
+
+    .form-title {
+      color: #ffc107; /* Yellow color for the form title */
+    }
+
+    .input {
+      margin-bottom: 15px; /* Space between input fields */
+    }
+
+    .btn {
+      background-color: #ffc107; /* Yellow color for the button background */
+      color: #fff; /* White text color */
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #ffae00; /* Darker yellow on hover */
+    }
+
+      /* Adjusted styles for radio buttons */
+  .form-check-input[type="radio"] {
+    margin-top: 3px; /* Adjust the margin for better alignment */
+  }
+
+  /* Style for radio button labels */
+  .form-check-label {
+    color: #555; /* Adjust the color to make the text visible */
+  }
+
+    
+  </style>
+
+  <title>Bid Details</title>
+
+  <!-- Include Firebase JavaScript SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+</head>
+
+<body>
+
+  <div id="bidDetailsForm" class="frame b-gray white p-4">
+    <h5 class="form-title text-center mb-3">Enter Your Bid Details</h5>
+    <form id="bidForm" class="form-group">
+      <div class="form-row">
+        <div class="col">
+          <input id="firstNameInput" class="input form-control" type="text" name="firstName" placeholder="First Name"
+            required />
+        </div>
+        <div class="col">
+          <input id="lastNameInput" class="input form-control" type="text" name="lastName" placeholder="Last Name"
+            required />
+        </div>
+      </div>
+      <input id="emailInput" class="input form-control mt-3" type="email" name="email" placeholder="Email" required />
+
+      <!-- Radio buttons for immediate or after 7 days -->
+      <div class="form-check form-check-inline mt-3">
+        <input class="form-check-input" type="radio" name="timingRadio" id="bidNowRadio" value="bidNow" checked>
+        <label class="form-check-label" for="bidNowRadio">Accept Bid now!</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="timingRadio" id="bidLaterRadio" value="bidLater">
+        <label class="form-check-label" for="bidLaterRadio">Accept Bid in 7 Days if there is any change in value </label>
+      </div>
+
+      <div class="text-center mt-3">
+        <input class="btn btn-warning" type="button" onClick="submitBidForm()" value="Submit" />
+      </div>
+    </form>
+
+    <!-- Display bid messages here -->
+    <div id="bidMessage" class="bid-message text-center mt-4"></div>
+  </div>
+
+  <script>
+    // Initialize Firebase with your configuration
+    const firebaseConfig = {
+    apiKey: "AIzaSyBUlftcdeADU4BD2go-vPy_padnktyPX2Q",
+    authDomain: "formiws.firebaseapp.com",
+    databaseURL: "https://formiws-default-rtdb.firebaseio.com",
+    projectId: "formiws",
+    storageBucket: "formiws.appspot.com",
+    messagingSenderId: "468065064375",
+    appId: "1:468065064375:web:edb58524b90df4a3120432"
+  };
+
+    firebase.initializeApp(firebaseConfig);
+
+  async function submitBidForm() {
+  const firstName = document.getElementById("firstNameInput").value;
+  const lastName = document.getElementById("lastNameInput").value;
+  const email = document.getElementById("emailInput").value;
+  const timing = document.querySelector('input[name="timingRadio"]:checked').value;
+
+  // Your Firebase Firestore URL with the new collection name
+  const firebaseURL = "https://formiws-default-rtdb.firebaseio.com/customBids.json";
+
+  // Create a data object
+  const data = {
+    firstName,
+    lastName,
+    email,
+    timing
+  };
+
+  try {
+    // Use Fetch API to send a POST request
+    const response = await fetch(firebaseURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      // Display bid message based on the selected timing
+      const message = (timing === 'bidNow') ? 'Bid accepted! You will be contacted shortly.' : 'We will contact you if you accept the Bid in 7 days.';
+      displayBidMessage(message);
+      // You can add additional actions after a successful submission
+    } else {
+      console.error("Error submitting bid data");
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+}
+
+
+    // Function to display a bid message
+    function displayBidMessage(message) {
+      const bidMessageElement = document.getElementById("bidMessage");
+      bidMessageElement.innerText = message;
+    }
+  </script>
+
+  <!-- Your existing scripts -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN
+
+"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+</body>
+
+</html>

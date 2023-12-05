@@ -1,0 +1,138 @@
+<!-- quote_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote Form</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <!-- Custom CSS -->
+  <style>
+    body {
+      background-color: #f8f9fa; /* Light gray background color */
+      font-family: 'Arial', sans-serif;
+    }
+
+    .frame {
+      border: 1px solid #ddd; /* Gray border */
+      border-radius: 8px; /* Rounded corners */
+      margin: 0 auto; /* Center the form on the page */
+      max-width: 600px; /* Set a maximum width */
+      padding: 20px; /* Add some padding */
+    }
+
+    .form-group {
+      width: 100%; /* Full width for the form */
+    }
+
+    .form-title {
+      color: #ffc107; /* Yellow color for the form title */
+    }
+
+    .input {
+      margin-bottom: 15px; /* Space between input fields */
+    }
+
+    .btn {
+      background-color: #ffc107; /* Yellow color for the button background */
+      color: #fff; /* White text color */
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #ffae00; /* Darker yellow on hover */
+    }
+  </style>
+</head>
+
+<body>
+  <div id="quoteForm" class="frame b-gray white d-sm-block d-none p-0 mt-4">
+    <form id="quoteSubmissionForm" class="form-group b-p-gray py-lg-5 py-md-3 px-lg-3 px-md-2">
+      <h5 class="form-title text-center mb-3">Submit Your Quote</h5>
+      <div class="form-row">
+        <div class="col">
+          <input id="firstNameInput" class="input form-control" type="text" name="firstName" placeholder="First Name"
+            required />
+        </div>
+        <div class="col">
+          <input id="lastNameInput" class="input form-control" type="text" name="lastName" placeholder="Last Name"
+            required />
+        </div>
+      </div>
+      <input id="phoneNumberInput" class="input form-control mt-3" type="tel" name="phoneNumber"
+        placeholder="Phone Number" required />
+      <input id="vehicleTypeInput" class="input form-control mt-3" type="text" name="vehicleType"
+        placeholder="Vehicle Type" required />
+      <textarea id="quoteInput" class="form-control mt-3" name="quote" rows="4" placeholder="Your Quote" required></textarea>
+      <div class="text-center mt-3">
+        <input class="btn btn-warning" type="button" onClick="submitQuoteForm()" value="Submit" />
+      </div>
+    </form>
+  </div>
+
+  <!-- Add your Firebase configuration and submitForm function (similar to previous examples) -->
+
+  <script>
+    // Function to submit the quote form data to Firebase
+    async function submitQuoteForm() {
+      const firstName = document.getElementById("firstNameInput").value;
+      const lastName = document.getElementById("lastNameInput").value;
+      const phoneNumber = document.getElementById("phoneNumberInput").value;
+      const vehicleType = document.getElementById("vehicleTypeInput").value;
+      const quote = document.getElementById("quoteInput").value;
+
+      // Your Firebase Realtime Database URL
+      const firebaseURL = "https://formiws-default-rtdb.firebaseio.com/quotes.json";
+
+      // Create a data object
+      const data = {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        vehicleType: vehicleType,
+        quote: quote
+      };
+
+      try {
+        // Use Fetch API to send a POST request
+        const response = await fetch(firebaseURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          console.log("Quote data submitted successfully");
+          alert("Quote data submitted successfully!"); // Display alert message
+          resetQuoteForm(); // Reset the form
+          // You can add additional actions after a successful submission
+        } else {
+          console.error("Error submitting quote data");
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+    }
+
+    // Function to reset the quote form
+    function resetQuoteForm() {
+      document.getElementById("quoteSubmissionForm").reset();
+    }
+  </script>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+</body>
+
+</html>
